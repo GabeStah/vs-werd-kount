@@ -40,16 +40,38 @@ class WordCounter {
 
         // Only update status if an Markdown file
         if (doc.languageId === "markdown") {
-            let wordCount = this._getWordCount(doc);
+            let characterCount = this._getCharacterCount(doc);
+            let selectedCharacterCount = this._getCharacterCount(doc, editor.selections);
+            let selectedCharacterText = selectedCharacterCount !== 0 ? ` / ${selectedCharacterCount}` : ``;            
+            let wordCount = this._getWordCount(doc);            
             let selectedWordCount = this._getWordCount(doc, editor.selections);
-            let selectedText = selectedWordCount !== 0 ? `/ ${selectedWordCount}` : ``;
+            let selectedWordText = selectedWordCount !== 0 ? ` / ${selectedWordCount}` : ``;
 
             // Update the status bar
-            this._statusBarItem.text = wordCount !== 1 ? `$(pencil) ${wordCount} ${selectedText} Words` : '$(pencil) 1 Word';
+            this._statusBarItem.text = wordCount !== 1 ? `$(pencil) ${wordCount}${selectedWordText} Words | ${characterCount}${selectedCharacterText} Chars` : '$(pencil) 1 Word';
             this._statusBarItem.show();
         } else { 
             this._statusBarItem.hide();
         }
+    }
+
+    public _getCharacterCount(doc: TextDocument, selections?: Selection[]): number {
+        let docContent   
+        if (selections) {
+            docContent = doc.getText(selections[0].with());
+        } else {
+            docContent = doc.getText();
+        }
+
+        // Parse out unwanted whitespace so the split is accurate
+        docContent = docContent.replace(/(< ([^>]+)<)/g, '').replace(/\s+/g, ' ');
+        docContent = docContent.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+        let count = 0;
+        if (docContent != "") {
+            count = docContent.length;
+        }
+
+        return count;
     }
 
     public _getWordCount(doc: TextDocument, selections?: Selection[]): number {
@@ -63,12 +85,12 @@ class WordCounter {
         // Parse out unwanted whitespace so the split is accurate
         docContent = docContent.replace(/(< ([^>]+)<)/g, '').replace(/\s+/g, ' ');
         docContent = docContent.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-        let wordCount = 0;
+        let count = 0;
         if (docContent != "") {
-            wordCount = docContent.split(" ").length;
+            count = docContent.split(" ").length;
         }
 
-        return wordCount;
+        return count;
     }
 
     dispose() {
