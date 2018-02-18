@@ -64,7 +64,9 @@ class WordCounter {
         }
 
         // Parse out unwanted whitespace so the split is accurate
-        docContent = docContent.replace(/(< ([^>]+)<)/g, '').replace(/\s+/g, ' ');
+        // Removed replacement of greater-than/less-than characters.
+        //docContent = docContent.replace(/(< ([^>]+)<)/g, '').replace(/\s+/g, ' ');
+        docContent = docContent.replace(/\s+/g, ' ');
         docContent = docContent.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
         let count = 0;
         if (docContent != "") {
@@ -83,7 +85,9 @@ class WordCounter {
         }
 
         // Parse out unwanted whitespace so the split is accurate
-        docContent = docContent.replace(/(< ([^>]+)<)/g, '').replace(/\s+/g, ' ');
+        // Removed replacement of greater-than/less-than characters.
+        //docContent = docContent.replace(/(< ([^>]+)<)/g, '').replace(/\s+/g, ' ');        
+        docContent = docContent.replace(/\s+/g, ' ');
         docContent = docContent.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
         let count = 0;
         if (docContent != "") {
