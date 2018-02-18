@@ -1,3 +1,6 @@
+---
+word-count: 357
+---
 # Welcome to your first VS Code Extension
 
 ## What's in the folder
